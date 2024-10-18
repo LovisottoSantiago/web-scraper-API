@@ -28,7 +28,7 @@ public class WebscraperApiApplication {
         return String.format("Hello %s!", name);
     }
 
-	@GetMapping("/baldes")
+	@GetMapping("/productos")
 	public List<Product> getProducts(){
 		return scrapingService.getProducts();
 	}

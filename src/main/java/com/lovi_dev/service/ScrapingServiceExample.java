@@ -18,34 +18,38 @@ public class ScrapingServiceExample {
 
     public List<Product> getProducts() {
         List<Product> products = new ArrayList<>();
-
-        // Set the path to geckodriver
         System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
-
-        // Set Firefox options
         FirefoxOptions options = new FirefoxOptions();
         options.addArguments("--headless"); // Run in headless mode (no GUI)
-
-        // Initialize the WebDriver
         WebDriver driver = new FirefoxDriver(options);
 
         try {
-            String url = "http://books.toscrape.com/";
+            String url = "https://www.sina.com.ar/ofertas"; 
             driver.get(url);
 
-            // Wait until the book elements are present
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector(".product_pod")));
+            wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector(".resultado__item")));
 
-            // Select all book containers
-            List<WebElement> elementProducts = driver.findElements(By.cssSelector(".product_pod"));
+            // Select all product containers
+            List<WebElement> elementProducts = driver.findElements(By.cssSelector(".resultado__item"));
 
             for (WebElement element : elementProducts) {
-                String name = element.findElement(By.cssSelector("h3 a")).getAttribute("title");
-                String price = element.findElement(By.cssSelector(".price_color")).getText();
+                String name = element.findElement(By.cssSelector(".tituloContainer .title")).getText();
+                String price = element.findElement(By.cssSelector(".precio p")).getText();
 
-                if (!name.isEmpty() && !price.isEmpty()) {
-                    Product product = new Product(name, price);
+                String imageUrl = element.findElement(By.cssSelector(".imagen img")).getAttribute("data-src");
+                if (imageUrl.isEmpty()) { // Fallback 
+                    imageUrl = element.findElement(By.cssSelector(".imagen img")).getAttribute("src");
+                }
+
+                // Debugging output
+                System.out.println("Name: " + name);
+                System.out.println("Price: " + price);
+                System.out.println("Image URL: " + imageUrl);
+                System.out.println("---------------");
+
+                if (!name.isEmpty() && !price.isEmpty() && !imageUrl.isEmpty()) {
+                    Product product = new Product(name, price, imageUrl);
                     products.add(product);
                 }
             }
