@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lovi_dev.service.Product;
 import com.lovi_dev.service.ScrapingServiceExample;
+import com.lovi_dev.service.elIndio;
 
 
 
@@ -18,6 +19,7 @@ import com.lovi_dev.service.ScrapingServiceExample;
 @SpringBootApplication
 public class WebscraperApiApplication {
 	private final ScrapingServiceExample scrapingService = new ScrapingServiceExample();
+	private final elIndio indioPrueba = new elIndio();
 
 	public static void main(String[] args) {
 		SpringApplication.run(WebscraperApiApplication.class, args);
@@ -31,6 +33,12 @@ public class WebscraperApiApplication {
 	@GetMapping("/productos")
 	public List<Product> getProducts(){
 		return scrapingService.getProducts();
+	}
+
+	
+	@GetMapping("/indio")
+	public List<Product> indio(){
+		return indioPrueba.getIndio();
 	}
 	
 
